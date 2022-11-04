@@ -1,9 +1,38 @@
+version: '3'
+
 services:
+  db:
+    image: postgres:13
+    container_name: db
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - network
   server:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/desafio
     ports:
       - "8000:8000"
-    
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  postgres:
