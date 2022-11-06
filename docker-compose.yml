@@ -15,12 +15,13 @@ services:
       - "5432:5432"
     networks:
       - network
-  server:
+  web:
     build: .
+    command: guinicorn desafio.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/desafio
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
@@ -28,7 +29,20 @@ services:
     depends_on:
       - db
     networks:
-      - network
+      network:
+        aliases:
+          - web
+  nginx:
+    build: ./nginx
+    ports: 
+      - 8000:80
+    depends_on:
+      - web
+    networks:
+      network:
+        aliases:
+          - nginx
+    
 
 networks:
   network:
