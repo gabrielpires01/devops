@@ -31,3 +31,10 @@ Now just deploy with:
 ```bash
   ./deploy.sh
 ```
+
+## Accessing
+
+Your application should be running on localhost:8000 now
+you can view the greeting message from
+
+localhost:8000/greeting
