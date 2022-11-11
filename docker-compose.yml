@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   db:
@@ -17,9 +17,7 @@ services:
       - network
   web:
     build: .
-    command: guinicorn desafio.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - .:/desafio
+    command: gunicorn desafio.wsgi --bind 0.0.0.0:8000
     expose:
       - 8000
     environment:
@@ -33,7 +31,9 @@ services:
         aliases:
           - web
   nginx:
-    build: ./nginx
+    image: nginx:1.15.0
+    volumes:
+      - './nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
     ports: 
       - 8000:80
     depends_on:
